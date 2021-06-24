@@ -1,0 +1,109 @@
+#include<iostream>
+using namespace std;
+struct Node{
+  int data;
+  Node *next;
+  Node(int x){
+    data=x;
+    next=NULL;
+  }
+};
+Node *circularListInsertAtBegin(Node *head, int x){   //O(1)
+  Node *temp = new Node(x);
+  if(head==NULL){
+    temp->next = temp;
+     return temp;
+  }
+  temp->next = head->next;  // insert temp node after first node
+  head->next = temp;
+  int t = temp->data;    //and then swap the data of first and temp node
+  temp->data = head->data;
+  head->data = t;
+  return head;
+}
+Node *circularListInsertAtEnd(Node *head, int x){   //O(1)
+  Node *temp = new Node(x);
+  if(head==NULL){
+    temp->next = temp;
+     return temp;
+  }
+  temp->next = head->next;  // insert temp node after first node
+  head->next = temp;
+  int t = temp->data;    //and then swap the data of first and temp node
+  temp->data = head->data;
+  head->data = t;
+  return temp;                        
+}
+Node *circularListDeletefromBegin(Node *head){   //O(1)
+  if(head==NULL)return head;
+  if(head->next==head){
+    delete(head);
+    return NULL;
+  }
+  Node *temp = head->next;
+  head->data = temp->data;  
+  head->next = temp->next;
+  delete(temp);
+  return head;
+}
+
+Node *circularListDeletefromEnd(Node *head){   //O(N)
+  if(head==NULL)return head;
+  if(head->next==head){
+    delete(head);
+    return NULL;
+  }
+  Node *curr = head;
+  Node *temp;
+  while(curr->next!=head){
+    temp=curr;
+    curr=curr->next;
+  }
+  delete(curr);
+  temp->next = head;
+  return head;
+}
+
+Node *circularListDeleteAtKPosition(Node *head, int k){   //O(N)
+  if(head==NULL)return head;
+  
+  if(k==1){         //first node
+   Node *ans = circularListDeletefromBegin(head);
+   return ans;
+  }
+  
+  Node *curr = head;
+  for(int i=1;i<=k-2;i++)
+  curr = curr->next;
+  
+  Node *hold = curr->next;
+  curr->next = hold->next;
+  delete(hold);
+  return head;
+}
+
+
+void printCircularList(Node *head){
+  Node *curr = head;
+  do{
+   cout<<curr->data;
+   curr=curr->next;
+  }
+  while(curr!=head);
+}
+int main()
+{
+cout<<"hello";
+  Node *head = NULL;
+  head = circularListInsertAtEnd(head, 1);
+  head = circularListInsertAtEnd(head, 2);
+  head = circularListInsertAtEnd(head, 3);
+  head = circularListInsertAtEnd(head, 4);
+  int pos;cin>>pos;
+  head = circularListDeleteAtKPosition(head, pos);
+  
+  
+  printCircularList(head);
+  
+  return 0;
+}
